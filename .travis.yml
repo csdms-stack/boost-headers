@@ -1,0 +1,20 @@
+language: generic
+os:
+- linux
+- osx
+env:
+  global:
+  - THIS_PACKAGE=boost-headers
+  - BUILD_STR="dev"
+  - TRAVIS_PYTHON_VERSION="2.7"
+  - NUMPY_VERSION="1.9"
+  - secure: LAKCYEEofTOjjZOUsB1ZTeL49efw4MhV/aw8Md8ojP30dxDzsjwgcMBdUsUUH07XEw6j5wURi9zW9yIGy95XGgSrS+ATdkl+l/+dtCMy9ooDJ9i4m9hyeq2WsINriIXpXeUjgJ/HqMCb+E99y3aQAlo/DMlNzweSIc31f0ywQhfKnm29t3wBAyiCRwqrMA73nTBFIOzX/8YrWjPv+gLw1LWXooC5fbHRhrWYR+5bwkFz2aY7ZG5lOxeTY7zkH2UwzmeJuI7YoUdpYg1VcUOwDnDmjuSEuSVIhC3sbkHV5v3dWKg77mtmansT4HUz9sikh8M5sLDN15fQMhNMpjthZrE+2cLo17L4Z1dtWX/6EWgwp+2Q7v8ub2Q8vvxf+mQqH5UZNAEuEyNgL81HFdMlCR5kfhFNyI5PvKPUuTBwY3YueJVNIWG4/Y4n9/1CtvfsaG2lb3LIT+7a6XchjyinTWzIyU4OkXm7IG5/aGl+RGfb62KzFo2A4vMfqOhfCUBq+u/ylu7PsF7pwHHXN7caZP9S7ZjnaCrZEjOtjn3aBM+EGo2ONpdw0E2BGQa33zIxPEwrJRlaFkhD+G8GTzP+znzzYMHDK5IdgXApCpnHrNrVHDtV6JkN+u5ILpLMY1GEruBJD1PK1Irrq2SJupcL6bQODvz1yvZvmvbI80H6oJM=
+sudo: false
+install:
+- bash ci/travis/install_python.sh $HOME/miniconda
+- export PATH="$HOME/miniconda/bin:$PATH"
+script:
+- conda build recipe -c conda-forge -c csdms-stack
+after_success:
+- if [[ $TRAVIS_BRANCH == "master" ]]; then export CHANNEL="main"; fi
+- bash ci/travis/deploy_to_anaconda.sh $THIS_PACKAGE
